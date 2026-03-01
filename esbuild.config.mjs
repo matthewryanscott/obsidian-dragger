@@ -4,9 +4,18 @@ import builtins from "builtin-modules";
 import fs from "fs";
 
 const prod = process.argv[2] === "production";
-const pluginDir = "V:/dragger/.obsidian/plugins/dragger";
+const isTestBuild = !!process.env.TEST_PLATFORM;
 
-// 复制 styles.css 到插件目录
+if (!process.env.OBSIDIAN_VAULT_PATH) {
+    console.error("Error: OBSIDIAN_VAULT_PATH environment variable is not set.");
+    console.error("Set it to your Obsidian vault root, e.g.: export OBSIDIAN_VAULT_PATH=/path/to/my-vault");
+    process.exit(1);
+}
+
+const pluginDir = `${process.env.OBSIDIAN_VAULT_PATH}/.obsidian/plugins/dragger`;
+
+fs.mkdirSync(pluginDir, { recursive: true });
+
 function copyStyles() {
     fs.copyFileSync("styles.css", `${pluginDir}/styles.css`);
     console.log("✓ styles.css copied to plugin directory");
@@ -18,7 +27,7 @@ function copyManifest() {
 }
 
 const context = await esbuild.context({
-    entryPoints: ["src/main.ts"],
+    entryPoints: [isTestBuild ? "src/test-bridge/DragNDropPluginWithTests.ts" : "src/main.ts"],
     bundle: true,
     external: [
         "obsidian",

@@ -1,0 +1,13 @@
+{
+    "testEnvironment": "./jest/obsidian-environment.js",
+    "globalSetup": "./jest/global-setup.js",
+    "globalTeardown": "./jest/global-teardown.js",
+    "transform": {
+        "\\.spec\\.md$": "./jest/md-spec-transformer.js",
+        "\\.ts$": "babel-jest"
+    },
+    "testMatch": [
+        "<rootDir>/specs/**/*.spec.md"
+    ],
+    "moduleFileExtensions": ["ts", "js", "md", "json"]
+}

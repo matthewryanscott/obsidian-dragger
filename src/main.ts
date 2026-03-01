@@ -1,5 +1,7 @@
 import { Plugin } from 'obsidian';
 import { dragHandleExtension } from './features/editor-plugin/ExtensionFactory';
+import { registerKeyboardCommands } from './features/keyboard-shortcuts/register-commands';
+import { keyboardShortcutKeymap } from './features/keyboard-shortcuts/register-keymaps';
 import { setHandleHorizontalOffsetPx } from './infra/dom/handle/handle-positioner';
 import { setHandleSizePx, setAlignToLineNumber } from './shared/constants';
 import {
@@ -22,6 +24,10 @@ export default class DragNDropPlugin extends Plugin {
 
         // 注册编辑器扩展
         this.registerEditorExtension(dragHandleExtension(this));
+        this.registerEditorExtension(keyboardShortcutKeymap(this));
+
+        // 注册键盘快捷键命令
+        registerKeyboardCommands(this);
 
         // 添加设置面板
         this.addSettingTab(new DragNDropSettingTab(this.app, this));
